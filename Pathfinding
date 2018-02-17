@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+#source: http://mnemstudio.org/path-finding-q-learning-tutorial.htm
+
+import numpy as np
+import os
+
+R = np.array([[-1, -1, -1, -1, 0, -1],
+              [-1, -1, -1, 0, -1, 100],
+              [-1, -1, -1, 0, -1, -1],
+              [-1, 0, 0, -1, 0, -1],
+              [0, -1, -1, 0, -1, -1],
+              [-1, 0, -1, -1, -1, 100]]).astype("float16")
+
+Q = np.zeros_like(R)
+
+gamma = 0.8
+max_iter = 100
+num_states = 6
+actions = np.arange(6)
+#state = durum
+#eğitimin başlangıcı
+for n in range(int(max_iter)):
+    isGoal = False
+
+    #rastgele bir başlangıç durumu seçin.
+    state = np.random.randint(num_states);
+
+    while not isGoal:
+
+        valid_moves = R[state] >= 0
+
+        valid_actions = actions[valid_moves == True]
+        action = int(np.random.choice(valid_actions,size=1))
+
+        next_state = action
+        #takviyeli öğrenme formülümüz
+        Q[state,action] = R[state,action] + gamma * max(Q[next_state,:])
+
+        #doğrudan sonuçta atlamak için aşağıdaki 4 satırı yorumla.
+        print(np.rint(Q))
+        print('şu anki durum: ',state)
+        print('iterasyonlar:', n)
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        if next_state == 5:
+            isGoal = True
+
+        state = next_state
+#eğitimin sonu
+
+#nihai Q'yü görüntüle.
+print('\nEğitilmiş Q: ')
+Q =np.rint(Q)
+print(Q)
+
+nQ = Q/np.max(Q)*100
+print('\nnormalize edilmiş Q: ')
+print(np.rint(nQ))
+
+#test aşaması
+state = 2
+adımlar = [];
+adımlar.append(state)
+while state != 5:
+    actions = np.where(Q[state]== np.max(Q[state]))[0]
+
+    if actions.shape[0] >1:
+        action = int(np.random.choice(actions,size=1))
+    else:
+        action = int(actions)
+
+    steps.append(action)
+    state = action
+
+print('\n2den 5e giden yol')
+print(adımlar)
