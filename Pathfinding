@@ -56,11 +56,11 @@ print(Q)
 nQ = Q/np.max(Q)*100
 print('\nnormalize edilmiş Q: ')
 print(np.rint(nQ))
-
+#adimlar = steps
 #test aşaması
 state = 2
-adımlar = [];
-adımlar.append(state)
+adimlar = [];
+adimlar.append(state)
 while state != 5:
     actions = np.where(Q[state]== np.max(Q[state]))[0]
 
@@ -73,4 +73,4 @@ while state != 5:
     state = action
 
 print('\n2den 5e giden yol')
-print(adımlar)
+print(adimlar)
